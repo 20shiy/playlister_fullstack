@@ -87,9 +87,43 @@ getPlaylistPairs = async (req, res) => {
     }).catch(err => console.log(err))
 }
 
+updatePlaylist = async (req, res) => {
+    console.log("inside server controller update playlist");
+    const body = req.body;
+    if(!body) {
+        return res.status(400).json({success: false, error: 'You must provide body to update'})
+    }
+    Playlist.findOne({_id:req.params.id}, (err, list) => {
+        if(err) {
+            return res.status.json({
+                err,
+                message: 'list not found'
+            })
+        }
+
+        list.name = body.name
+        list.items = body.items
+        list.save().then(() => {
+            console.log("updated!")
+            return res.status(200).json({success: true, 
+                id: list._id,
+                message: 'update playlist successful!'})
+        }).catch(error => {
+            console.log("not updated")
+            return res.status(400).json({
+                error,
+                message: "list not updated"
+            })
+        })
+    })
+
+
+}
+
 module.exports = {
     createPlaylist,
     getPlaylists,
     getPlaylistPairs,
-    getPlaylistById
+    getPlaylistById,
+    updatePlaylist
 }
