@@ -68,6 +68,7 @@ body {
   grid-row: 2 / 3;
   display:grid;
   background-color: var(--swatch-primary);
+  padding-bottom: 10%;
 }
 
 .playlister-button, .playlister-button-disabled {
@@ -90,11 +91,11 @@ body {
 }
 
 #playlister-statusbar {
-  position: absolute;
-  left: 0%;
-  top: 90%;
-  width: 100%;
+  position: fixed;
+  bottom: 0;
   height: 10%;
+  width: 80%;
+  overflow: hidden;
   background-color: lightsalmon;
   display:flex;
   align-items: center;

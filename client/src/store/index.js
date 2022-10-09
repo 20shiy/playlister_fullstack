@@ -206,6 +206,25 @@ export const useGlobalStore = () => {
         });
     }
 
+    store.createNewList = function () {
+        async function asyncCreateNewList() {
+            let newName = "Untitled";
+            let newSongs = []
+            let payload = {name: newName, songs: newSongs}
+
+            let response = await api.createNewList(payload);
+            if(response.data.success) {
+                let newList = response.data.playlist;
+                storeReducer({
+                    type: GlobalStoreActionType.CREATE_NEW_LIST,
+                    payload: newList
+                })
+                store.history.push("/playlist/" + newList._id);
+            }
+        }
+        asyncCreateNewList();
+    }
+
     // THIS GIVES OUR STORE AND ITS REDUCER TO ANY COMPONENT THAT NEEDS IT
     return { store, storeReducer };
 }
