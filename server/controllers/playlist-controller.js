@@ -1,3 +1,4 @@
+// const { deleteListById } = require('../../client/src/api');
 const Playlist = require('../models/playlist-model')
 /*
     This is our back-end API. It provides all the data services
@@ -88,7 +89,7 @@ getPlaylistPairs = async (req, res) => {
 }
 
 updatePlaylist = async (req, res) => {
-    console.log("inside server controller update playlist");
+    // console.log("inside server controller update playlist");
     const body = req.body;
     if(!body) {
         return res.status(400).json({success: false, error: 'You must provide body to update'})
@@ -116,14 +117,22 @@ updatePlaylist = async (req, res) => {
             })
         })
     })
-
-
 }
 
+deleteListById = async (req, res) => {
+    await Playlist.findOneAndDelete({_id:req.params.id}, () => {
+        console.log("list deleted")
+        return res.status(200).json({success: true})
+    }).catch(err => {
+        console.log("error when deleting list " + err)
+        return res.status(200).json({success: false})
+    })
+}
 module.exports = {
     createPlaylist,
     getPlaylists,
     getPlaylistPairs,
     getPlaylistById,
-    updatePlaylist
+    updatePlaylist,
+    deleteListById
 }
