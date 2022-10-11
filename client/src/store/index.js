@@ -1,6 +1,7 @@
 import { createContext, useState } from 'react'
 import jsTPS from '../common/jsTPS'
 import api from '../api'
+// import { getAppBarUtilityClass } from '@mui/material';
 export const GlobalStoreContext = createContext({});
 /*
     This is our global data store. Note that it uses the Flux design pattern,
@@ -276,6 +277,30 @@ export const useGlobalStore = () => {
             }
         }
         asyncCreateNewList();
+    }
+
+    store.addSong = function(index, song) {
+        if(store.currentList) {
+            let list = store.currentList;
+            let songss = list.songs;
+            songss.splice(index, 0, song);
+            store.currentList.songs = songss;
+        }
+
+        store.updateCurrentList();
+    }
+
+    store.updateCurrentList = function() {
+        async function asyncUpdateCurrentList() {
+            const response = await api.updatePlaylistById(store.currentList._id, store.currentList);
+            if(response.data.success) {
+                storeReducer({
+                    type: GlobalStoreActionType.SET_CURRENT_LIST,
+                    payload: store.currentList
+                });
+            }
+        }
+        asyncUpdateCurrentList();
     }
 
     // THIS GIVES OUR STORE AND ITS REDUCER TO ANY COMPONENT THAT NEEDS IT

@@ -103,7 +103,8 @@ updatePlaylist = async (req, res) => {
         }
 
         list.name = body.name
-        list.items = body.items
+        list.songs = body.songs
+        // console.log(body.songs);
         list.save().then(() => {
             console.log("updated!")
             return res.status(200).json({success: true, 
