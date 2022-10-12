@@ -303,6 +303,24 @@ export const useGlobalStore = () => {
         asyncUpdateCurrentList();
     }
 
+    store.moveSong = function(oldIndex, newIndex) {
+        if(oldIndex < newIndex) {
+            let temp = store.currentList.songs[oldIndex];
+            for(let i=oldIndex; i<newIndex; i++) {
+                store.currentList.songs[i] = store.currentList.songs[i+1];
+            }
+            store.currentList.songs[newIndex] = temp;
+        } else if(oldIndex > newIndex) {
+            let temp = store.currentList.songs[oldIndex];
+            for(let i=oldIndex; i>newIndex; i--) {
+                store.currentList.songs[i] = store.currentList.songs[i-1];
+            }
+            store.currentList.songs[newIndex] = temp;
+        }
+
+        store.updateCurrentList();
+    }
+
     // THIS GIVES OUR STORE AND ITS REDUCER TO ANY COMPONENT THAT NEEDS IT
     return { store, storeReducer };
 }

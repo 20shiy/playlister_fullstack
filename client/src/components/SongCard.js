@@ -3,14 +3,51 @@ import { GlobalStoreContext } from '../store'
 
 function SongCard(props) {
     const { store } = useContext(GlobalStoreContext);
+    const [draggedTo, setDraggedTo] = useState(0);
 
     const { song, index } = props;
     let cardClass = "list-card unselected-list-card";
+
+    function handleDragStart(event) {
+        event.dataTransfer.setData("song", event.target.id);
+    }
+
+    function handleDragEnter(event) {
+        event.preventDefault();
+        setDraggedTo(true);
+    }
+
+    function handleDragOver(event) {
+        event.preventDefault();
+    }
+
+    function handleDrop(event) {
+        event.preventDefault();
+        let target = event.target;
+        let targetId = target.id;
+        targetId = parseInt(targetId.substring('song-'.length, targetId.length - 5));
+        let sourceId = event.dataTransfer.getData("song");
+        sourceId = parseInt(sourceId.substring('song-'.length, sourceId.length - 5));
+        setDraggedTo(false);
+
+        store.moveSong(sourceId, targetId);
+    }
+
+    function handleDragLeave(event) {
+        event.preventDefault();
+        setDraggedTo(false);
+    }
     return (
         <div
             key={index}
             id={'song-' + index + '-card'}
             className={cardClass}
+            onDragStart={handleDragStart}
+            onDragOver={handleDragOver}
+            onDragEnter={handleDragEnter}
+            onDragLeave={handleDragLeave}
+            onDrop={handleDrop}
+            draggable="true"
         >
             {index + 1}.
             <a
