@@ -153,6 +153,17 @@ input {
   color: var(--swatch-neutral);
 }
 
+#frm {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  /* width: 50%; */
+}
+
+.frm-component {
+  width: 80%;
+}
+
 /* THIS STYLE SHEET MANAGES STYLE FOR OUR MODAL, i.e. DIALOG BOX */
 
 .edit-modal-root {
@@ -227,11 +238,6 @@ input {
   gap: 10px 20px;
   font-size: 48pt;
 }
-
-/* span {
-  font-weight: bold;
-  font-style: italic;
-} */
 
 .modal-south {
   display:flex;

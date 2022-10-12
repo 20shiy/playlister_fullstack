@@ -37,6 +37,15 @@ function SongCard(props) {
         event.preventDefault();
         setDraggedTo(false);
     }
+
+    function handleClick(event) {
+        if(event.detail === 2) {
+            event.stopPropagation();
+            let targetId = event.target.id;
+            let songIndex = parseInt(targetId.substring('song-'.length, targetId.length - 5));
+            store.markSongForEdit(songIndex);
+        }
+    }
     return (
         <div
             key={index}
@@ -47,6 +56,7 @@ function SongCard(props) {
             onDragEnter={handleDragEnter}
             onDragLeave={handleDragLeave}
             onDrop={handleDrop}
+            onClick={handleClick}
             draggable="true"
         >
             {index + 1}.
