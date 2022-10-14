@@ -3,6 +3,7 @@ import jsTPS from '../common/jsTPS'
 import api from '../api'
 import MoveSong_Transaction from '../transactions/MoveSong_Transaction'
 import AddSong_Transaction from '../transactions/AddSong_Transaction'
+import RemoveSong_Transaction from '../transactions/RemoveSong_Transaction'
 
 export const GlobalStoreContext = createContext({});
 /*
@@ -430,13 +431,18 @@ export const useGlobalStore = () => {
     store.deleteSongConfirm = function() {
         let index = store.songIndexForRemove;
         let songTobeDeleted = store.currentList.songs[index];
-        store.deleteSongActual(index, songTobeDeleted);
+        store.addDeleteSongTransaction(index, songTobeDeleted);
         store.hideDeleteSongModal()
     }
 
     store.deleteSongActual = function(index, songTobeDeleted) {
         store.currentList.songs.splice(index, 1);
         store.updateCurrentList();
+    }
+
+    store.addDeleteSongTransaction = (songIndex, song) => {
+        let transaction = new RemoveSong_Transaction(store, songIndex, song);
+        tps.addTransaction(transaction);
     }
 
 
