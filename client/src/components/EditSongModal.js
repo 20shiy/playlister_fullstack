@@ -5,7 +5,12 @@ function EditSongModal() {
     const {store} = useContext(GlobalStoreContext);
 
     function handleEditSong() {
-        store.editSongConfirm();
+        let newTitle = document.getElementById("songTitle").value;
+        let newArtist = document.getElementById("songArtist").value;
+        let newyoutubeId = document.getElementById("youtubeId").value;
+        let newSong = {"title":newTitle, "artist":newArtist, "youTubeId":newyoutubeId};
+        let songIndex = store.songIndexForEdit;
+        store.addEditSongTransaction(songIndex, newSong);
     }
 
     function handlehideEditSongModal() {

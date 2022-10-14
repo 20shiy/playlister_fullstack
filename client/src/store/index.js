@@ -4,6 +4,7 @@ import api from '../api'
 import MoveSong_Transaction from '../transactions/MoveSong_Transaction'
 import AddSong_Transaction from '../transactions/AddSong_Transaction'
 import RemoveSong_Transaction from '../transactions/RemoveSong_Transaction'
+import EditSong_Transaction from '../transactions/EditSong_Transaction'
 
 export const GlobalStoreContext = createContext({});
 /*
@@ -22,7 +23,8 @@ export const GlobalStoreActionType = {
     LOAD_ID_NAME_PAIRS: "LOAD_ID_NAME_PAIRS",
     SET_CURRENT_LIST: "SET_CURRENT_LIST",
     SET_LIST_NAME_EDIT_ACTIVE: "SET_LIST_NAME_EDIT_ACTIVE",
-    SET_DELETE_SONG_ACTIVE: "SET_DELETE_SONG_ACTIVE"
+    SET_DELETE_SONG_ACTIVE: "SET_DELETE_SONG_ACTIVE",
+    SET_EDIT_SONG_ACTIVE: "SET_EDIT_SONG_ACTIVE"
 }
 
 // WE'LL NEED THIS TO PROCESS TRANSACTIONS
@@ -142,6 +144,18 @@ export const useGlobalStore = () => {
                     listMarkedForDeletion: null,
                     songIndexForEdit: -1,
                     songIndexForRemove: payload
+                });
+            }
+
+            case GlobalStoreActionType.SET_EDIT_SONG_ACTIVE: {
+                return setStore({
+                    idNamePairs: store.idNamePairs,
+                    currentList: store.currentList,
+                    newListCounter: store.newListCounter,
+                    listNameActive: true,
+                    listMarkedForDeletion: null,
+                    songIndexForEdit: payload,
+                    songIndexForRemove: -1
                 });
             }
 
@@ -389,6 +403,10 @@ export const useGlobalStore = () => {
     store.markSongForEdit = function(songIndex) {
         // let id = store.currentList._id;
         store.songIndexForEdit = songIndex;
+        storeReducer({
+            type: GlobalStoreActionType.SET_EDIT_SONG_ACTIVE,
+            payload: songIndex
+        });
         let song = store.currentList.songs[songIndex];
         let curTitle = song.title;
         let curArtist = song.artist;
@@ -401,30 +419,25 @@ export const useGlobalStore = () => {
         store.showEditSongModal();
     }
 
-    store.editSongConfirm = function() {
-        let newTitle = document.getElementById("songTitle").value;
-        let newArtist = document.getElementById("songArtist").value;
-        let newyoutubeId = document.getElementById("youtubeId").value;
-        let newSong = {"title":newTitle, "artist":newArtist, "youTubeId":newyoutubeId};
-        // console.log(newSong);
-        store.currentList.songs[store.songIndexForEdit] = newSong;
-        // console.log(store.currentList.songs[store.songIndexForEdit]);
-        // console.log(store.currentList.songs);
+    store.editSongConfirm = function(songIndex, newSong) {
+        store.currentList.songs.splice(songIndex, 1, newSong);
+        
         store.updateCurrentList();
         store.hideEditSongModal();
     }
 
+    store.addEditSongTransaction = function(songIndex, newSong) {
+        let oldSong = store.currentList.songs[store.songIndexForEdit];
+        let transaction = new EditSong_Transaction(store, songIndex, oldSong, newSong);
+        tps.addTransaction(transaction);
+    }
+
     store.markSongForDelete = function(songIndex) {
         store.songIndexForRemove = songIndex;
-        // console.log("index to be removed: " + store.songIndexForRemove);
-        // store.setIsDeleteSongActive();
-        // console.log(store.rememberRemoveIndex() + " index return by function");
         storeReducer({
             type: GlobalStoreActionType.SET_DELETE_SONG_ACTIVE,
             payload: songIndex
         });
-
-        // console.log("after payload: " + store.songIndexForRemove);
         store.showDeleteSongModal();
     }
 
