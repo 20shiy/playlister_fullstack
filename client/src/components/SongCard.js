@@ -31,7 +31,7 @@ function SongCard(props) {
         sourceId = parseInt(sourceId.substring('song-'.length, sourceId.length - 5));
         setDraggedTo(false);
 
-        store.moveSong(sourceId, targetId);
+        store.addMoveSongTransaction(sourceId, targetId);
     }
 
     function handleDragLeave(event) {

@@ -1,7 +1,7 @@
 import { createContext, useState } from 'react'
 import jsTPS from '../common/jsTPS'
 import api from '../api'
-// import { getAppBarUtilityClass } from '@mui/material';
+import MoveSong_Transaction from '../transactions/MoveSong_Transaction'
 export const GlobalStoreContext = createContext({});
 /*
     This is our global data store. Note that it uses the Flux design pattern,
@@ -371,6 +371,11 @@ export const useGlobalStore = () => {
         }
 
         store.updateCurrentList();
+    }
+
+    store.addMoveSongTransaction = function(oldIndex, newIndex) {
+        let transaction = new MoveSong_Transaction(store, oldIndex, newIndex);
+        tps.addTransaction(transaction);
     }
 
     store.markSongForEdit = function(songIndex) {
