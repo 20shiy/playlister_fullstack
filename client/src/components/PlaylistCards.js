@@ -2,6 +2,7 @@ import { useContext } from 'react'
 import { useHistory } from 'react-router-dom'
 import SongCard from './SongCard.js'
 import EditSongModal from './EditSongModal.js'
+import DeleteSongModal from './DeleteSongModal.js'
 import { GlobalStoreContext } from '../store'
 /*
     This React component lets us edit a loaded list, which only
@@ -26,6 +27,7 @@ function PlaylistCards() {
             ))
         }
         <EditSongModal />
+        <DeleteSongModal />
         </div>
     )
 }

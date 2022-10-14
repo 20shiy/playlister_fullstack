@@ -1,5 +1,6 @@
 import React, { useContext, useState } from 'react'
 import { GlobalStoreContext } from '../store'
+// import DeleteSongModal from './DeleteSongModal.js'
 
 function SongCard(props) {
     const { store } = useContext(GlobalStoreContext);
@@ -46,6 +47,12 @@ function SongCard(props) {
             store.markSongForEdit(songIndex);
         }
     }
+
+    function handleDeleteSong(event) {
+        event.stopPropagation();
+        store.markSongForDelete(index);
+    }
+
     return (
         <div
             key={index}
@@ -70,8 +77,10 @@ function SongCard(props) {
                 type="button"
                 id={"remove-song-" + index}
                 className="list-card-button"
+                onClick={handleDeleteSong}
                 value={"\u2715"}
             />
+            {/* <DeleteSongModal /> */}
         </div>
     );
 }

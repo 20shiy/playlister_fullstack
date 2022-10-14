@@ -19,7 +19,7 @@ export const GlobalStoreActionType = {
     LOAD_ID_NAME_PAIRS: "LOAD_ID_NAME_PAIRS",
     SET_CURRENT_LIST: "SET_CURRENT_LIST",
     SET_LIST_NAME_EDIT_ACTIVE: "SET_LIST_NAME_EDIT_ACTIVE",
-    MARK_SONG_FOR_EDIT: "MARK_SONG_FOR_EDIT"
+    SET_DELETE_SONG_ACTIVE: "SET_DELETE_SONG_ACTIVE"
 }
 
 // WE'LL NEED THIS TO PROCESS TRANSACTIONS
@@ -35,7 +35,8 @@ export const useGlobalStore = () => {
         newListCounter: 0,
         listNameActive: false,
         listMarkedForDeletion: null,
-        songIndexForEdit: -1
+        songIndexForEdit: -1,
+        songIndexForRemove: -1
     });
 
     // HERE'S THE DATA STORE'S REDUCER, IT MUST
@@ -51,7 +52,8 @@ export const useGlobalStore = () => {
                     newListCounter: store.newListCounter,
                     listNameActive: false,
                     listMarkedForDeletion: null,
-                    songIndexForEdit: -1
+                    songIndexForEdit: -1,
+                    songIndexForRemove: -1
                 });
             }
             // STOP EDITING THE CURRENT LIST
@@ -62,7 +64,8 @@ export const useGlobalStore = () => {
                     newListCounter: store.newListCounter,
                     listNameActive: false,
                     listMarkedForDeletion: null,
-                    songIndexForEdit: -1
+                    songIndexForEdit: -1,
+                    songIndexForRemove: -1
                 })
             }
             // CREATE A NEW LIST
@@ -73,7 +76,8 @@ export const useGlobalStore = () => {
                     newListCounter: store.newListCounter + 1,
                     listNameActive: false,
                     listMarkedForDeletion: null,
-                    songIndexForEdit: -1
+                    songIndexForEdit: -1,
+                    songIndexForRemove: -1
                 })
             }
             // GET ALL THE LISTS SO WE CAN PRESENT THEM
@@ -84,7 +88,8 @@ export const useGlobalStore = () => {
                     newListCounter: store.newListCounter,
                     listNameActive: false,
                     listMarkedForDeletion: null,
-                    songIndexForEdit: -1
+                    songIndexForEdit: -1,
+                    songIndexForRemove: -1
                 });
             }
             // PREPARE TO DELETE A LIST
@@ -96,7 +101,8 @@ export const useGlobalStore = () => {
                     newListCounter: store.newListCounter,
                     listNameActive: false,
                     listMarkedForDeletion: payload,
-                    songIndexForEdit: -1
+                    songIndexForEdit: -1,
+                    songIndexForRemove: -1
                 });
             }
             // UPDATE A LIST
@@ -107,7 +113,8 @@ export const useGlobalStore = () => {
                     newListCounter: store.newListCounter,
                     listNameActive: false,
                     listMarkedForDeletion: null,
-                    songIndexForEdit: -1
+                    songIndexForEdit: -1,
+                    songIndexForRemove: store.songIndexForRemove
                 });
             }
             // START EDITING A LIST NAME
@@ -118,7 +125,20 @@ export const useGlobalStore = () => {
                     newListCounter: store.newListCounter,
                     listNameActive: true,
                     listMarkedForDeletion: null,
-                    songIndexForEdit: -1
+                    songIndexForEdit: -1,
+                    songIndexForRemove: -1
+                });
+            }
+
+            case GlobalStoreActionType.SET_DELETE_SONG_ACTIVE: {
+                return setStore({
+                    idNamePairs: store.idNamePairs,
+                    currentList: store.currentList,
+                    newListCounter: store.newListCounter,
+                    listNameActive: true,
+                    listMarkedForDeletion: null,
+                    songIndexForEdit: -1,
+                    songIndexForRemove: payload
                 });
             }
 
@@ -280,6 +300,18 @@ export const useGlobalStore = () => {
         modal.classList.remove("is-visible");
     }
 
+    store.hideDeleteSongModal = function() {
+        let modal = document.getElementById("delete-song-modal");
+        modal.classList.remove("is-visible");
+    }
+
+    store.showDeleteSongModal = function() {
+        let modal = document.getElementById("delete-song-modal");
+        // console.log("index: " + store.songIndexForRemove);
+        // console.log(store.songIndexForRemove);
+        modal.classList.add("is-visible");
+    }
+
     store.createNewList = function () {
         async function asyncCreateNewList() {
             let newName = "Untitled";
@@ -342,7 +374,7 @@ export const useGlobalStore = () => {
     }
 
     store.markSongForEdit = function(songIndex) {
-        let id = store.currentList._id;
+        // let id = store.currentList._id;
         store.songIndexForEdit = songIndex;
         let song = store.currentList.songs[songIndex];
         let curTitle = song.title;
@@ -368,6 +400,33 @@ export const useGlobalStore = () => {
         store.updateCurrentList();
         store.hideEditSongModal();
     }
+
+    store.markSongForDelete = function(songIndex) {
+        store.songIndexForRemove = songIndex;
+        // console.log("index to be removed: " + store.songIndexForRemove);
+        // store.setIsDeleteSongActive();
+        // console.log(store.rememberRemoveIndex() + " index return by function");
+        storeReducer({
+            type: GlobalStoreActionType.SET_DELETE_SONG_ACTIVE,
+            payload: songIndex
+        });
+
+        // console.log("after payload: " + store.songIndexForRemove);
+        store.showDeleteSongModal();
+    }
+
+    store.deleteSongConfirm = function() {
+        let index = store.songIndexForRemove;
+        let songTobeDeleted = store.currentList.songs[index];
+        store.deleteSongActual(index, songTobeDeleted);
+        store.hideDeleteSongModal()
+    }
+
+    store.deleteSongActual = function(index, songTobeDeleted) {
+        store.currentList.songs.splice(index, 1);
+        store.updateCurrentList();
+    }
+
 
     // THIS GIVES OUR STORE AND ITS REDUCER TO ANY COMPONENT THAT NEEDS IT
     return { store, storeReducer };
