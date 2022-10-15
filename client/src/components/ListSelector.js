@@ -19,6 +19,14 @@ const ListSelector = () => {
     function handleCreateNewList() {
         store.createNewList();
     }
+
+    let buttonClass = "playlister-button"
+    // console.log(store.toggleDeleteList);
+    let editStatus = store.listNameActive;
+    let toggleStatus = store.toggle;
+    if(editStatus || toggleStatus) {
+        buttonClass += " disabled"
+    }
     let listCard = "";
     if (store) {
         listCard = store.idNamePairs.map((pair) => (
@@ -37,7 +45,8 @@ const ListSelector = () => {
                     type="button"
                     id="add-list-button"
                     onClick={handleCreateNewList}
-                    className="playlister-button"
+                    className={buttonClass}
+                    disabled={editStatus}
                     value="+" />
                 Your Lists
             </div>                {

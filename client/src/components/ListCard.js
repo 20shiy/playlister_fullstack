@@ -16,6 +16,7 @@ function ListCard(props) {
     const { idNamePair, selected } = props;
 
     function handleLoadList(event) {
+        // console.log('load list');
         if (!event.target.disabled) {
             let _id = event.target.id;
             if (_id.indexOf('list-card-text-') >= 0)
@@ -34,19 +35,28 @@ function ListCard(props) {
     function toggleEdit() {
         let newActive = !editActive;
         if (newActive) {
-            // store.setIsListNameEditActive();
             store.setlistNameActive();
         }
         setEditActive(newActive);
+        // store.closeCurrentList();
     }
 
     function handleKeyPress(event) {
         if (event.code === "Enter") {
             let id = event.target.id.substring("list-".length);
-            // console.log("id " + id);
+            // toggleEdit();
             store.changeListName(id, text);
             toggleEdit();
+            store.closeCurrentList();
+            // console.log(store.currentList);
         }
+    }
+
+    function handleBlur(event) {
+        let id = event.target.id.substring("list-".length);
+        store.changeListName(id, text);
+        toggleEdit();
+        store.closeCurrentList();
     }
     function handleUpdateText(event) {
         setText(event.target.value );
@@ -64,7 +74,7 @@ function ListCard(props) {
         selectClass = "selected-list-card";
     }
     let cardStatus = false;
-    if (store.isListNameEditActive) {
+    if (store.listNameActive) {
         cardStatus = true;
     }
     let cardElement =
@@ -105,6 +115,7 @@ function ListCard(props) {
                 type='text'
                 onKeyPress={handleKeyPress}
                 onChange={handleUpdateText}
+                onBlur={handleBlur}
                 defaultValue={idNamePair.name}
             />;
     }

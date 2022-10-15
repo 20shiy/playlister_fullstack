@@ -147,6 +147,7 @@ input {
 
 .disabled {
   background-color: lightgray;
+  /* cursor: not-allowed; */
 }
 
 .disabled:hover {

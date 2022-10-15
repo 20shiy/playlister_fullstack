@@ -28,10 +28,24 @@ function EditToolbar() {
         let newSong = {"title":"Untitled", "artist":"Unknown", "youTubeId":"dQw4w9WgXcQ"};
         store.addSongTransaction(index, newSong);
     }
-    let editStatus = false;
-    if (store.isListNameEditActive) {
-        editStatus = true;
+
+    let editStatus = true;
+    let toggleStatus = store.toggle;
+    let undoStatus = !store.canUndo;
+    console.log("undo status: " + undoStatus);
+    let redoStatus = !store.canRedo;
+    // console.log(toggleStatus);
+    if (store.currentList) {
+        if(!toggleStatus) {
+            editStatus = false;
+        }
+        if(toggleStatus) {
+            undoStatus = true;
+            redoStatus = true;
+        }
+        
     }
+
     return (
         <span id="edit-toolbar">
             <input
@@ -45,7 +59,7 @@ function EditToolbar() {
             <input
                 type="button"
                 id='undo-button'
-                disabled={editStatus}
+                disabled={undoStatus}
                 value="⟲"
                 className={enabledButtonClass}
                 onClick={handleUndo}
@@ -53,7 +67,7 @@ function EditToolbar() {
             <input
                 type="button"
                 id='redo-button'
-                disabled={editStatus}
+                disabled={redoStatus}
                 value="⟳"
                 className={enabledButtonClass}
                 onClick={handleRedo}

@@ -106,7 +106,7 @@ updatePlaylist = async (req, res) => {
         list.songs = body.songs
         // console.log(body.songs);
         list.save().then(() => {
-            console.log("updated!")
+            console.log("updated!?")
             return res.status(200).json({success: true, 
                 id: list._id,
                 message: 'update playlist successful!'})
