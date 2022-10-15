@@ -32,7 +32,7 @@ function EditToolbar() {
     let editStatus = true;
     let toggleStatus = store.toggle;
     let undoStatus = !store.canUndo;
-    console.log("undo status: " + undoStatus);
+    // console.log("undo status: " + undoStatus);
     let redoStatus = !store.canRedo;
     // console.log(toggleStatus);
     if (store.currentList) {
