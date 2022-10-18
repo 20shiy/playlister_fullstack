@@ -215,7 +215,7 @@ export const useGlobalStore = () => {
                     currentList: store.currentList,
                     newListCounter: store.newListCounter,
                     listNameActive: false,
-                    listMarkedForDeletion: null,
+                    listMarkedForDeletion: store.listMarkedForDeletion,
                     songIndexForEdit: payload,
                     songIndexForRemove: -1,
                     toggle: false,
@@ -413,11 +413,12 @@ export const useGlobalStore = () => {
 
     store.hideDeleteSongModal = function() {
         let modal = document.getElementById("delete-song-modal");
+        modal.classList.remove("is-visible");
         storeReducer({
             type: GlobalStoreActionType.SET_TOGGLE_SONG,
             payload: null
         });
-        modal.classList.remove("is-visible");
+        // modal.classList.remove("is-visible");
     }
 
     store.showDeleteSongModal = function() {
@@ -556,6 +557,13 @@ export const useGlobalStore = () => {
         tps.addTransaction(transaction);
     }
 
+    store.hasTransactionToUndo = function() {
+        return tps.hasTransactionToUndo();
+    }
+
+    store.hasTransactionToRedo = function() {
+        return tps.hasTransactionToRedo();
+    }
 
     // THIS GIVES OUR STORE AND ITS REDUCER TO ANY COMPONENT THAT NEEDS IT
     return { store, storeReducer };

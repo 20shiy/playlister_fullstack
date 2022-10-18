@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css?family=Tangerine');
+
 :root {
   /* 
         FIRST WE'LL DEFINE OUR SWATCHES, i.e. THE COMPLEMENTARY
@@ -22,7 +24,8 @@ body {
 
 #root {
   background-color: var(--swatch-primary);
-  font-family: "Lexend Exa";
+  font-family: "Tangerine","Lexend Exa", serif;
+  font-size: 32pt;
   position: absolute;
   width: 80%;
   left: 10%;
@@ -108,7 +111,7 @@ body {
 }
 
 .list-card, .selected-list-card, .unselected-list-card {
-  font-size: 18pt;
+  font-size: 24pt;
   margin: 10px;
   padding: 20px;
   border-radius: 25px;

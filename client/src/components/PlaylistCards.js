@@ -18,6 +18,7 @@ function PlaylistCards() {
         store.history.push('/');
         return null;
     }
+
     return (
         <div id="playlist-cards">
         {
